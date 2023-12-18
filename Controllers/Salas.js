@@ -1,4 +1,5 @@
 const Salas = require("../Models/Salas")
+const ObjectId = require("mongoose").Types.ObjectId
 
 module.exports.addSala = async (sala) => {
     if (!('ocupacao' in sala)) { //> caso não tenha o campo ocupacao
@@ -16,8 +17,21 @@ module.exports.addSalas = async (salas) => {
     return await Salas.collection.insertMany(salas)
 }
 
-module.exports.alocarSala = (idSala, dataHora, duracao) => {
-    //! TODO: implement
+module.exports.alocarSala = async (idSala, dataHora, duracao) => {
+    let data = new Date(dataHora);
+    data.setMinutes(data.getMinutes() + duracao); //> Assume-se a "duracao" em MINUTOS
+    let horaInicio = dataHora
+    let horaFim = data.toISOString().replace('T', ' ').slice(0, 19)
+
+    let horario = {
+        dataHoraInicio: horaInicio,
+        dataHoraFim: horaFim
+    }
+    return await Salas.updateOne({ _id: new ObjectId(idSala) }, {
+        $push: {
+            ocupacao: horario
+        }
+    })
 }
 
 module.exports.getSalasDisponiveis = async (alunos, dataHora, duracao) => {
@@ -42,14 +56,8 @@ module.exports.getSalasDisponiveis = async (alunos, dataHora, duracao) => {
                     }
                 }
             },
-            {
-                $project: { _id: 1, edificio: 1, numSala: 1, piso: 1, capacidade: 1 }
-            },
-            {
-                $sort: {
-                    capacidade: -1
-                }
-            }
+            { $project: { _id: 1, edificio: 1, numSala: 1, piso: 1, capacidade: 1 } },
+            { $sort: { capacidade: -1 } }
         ]
     )
     //> Aloca os alunos às salas disponíveis

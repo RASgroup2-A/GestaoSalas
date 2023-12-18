@@ -42,7 +42,12 @@ router.post('/salas/calendarizacao', function (req, res, next) {
  */
 router.post('/salas/:idSala/alocar', function (req, res, next) {
     let dados = req.body;
-    
+    SalasController.alocarSala(req.params.idSala, dados.dataHora, dados.duracao)
+        .then((result) => {
+            res.jsonp(result)
+        }).catch((err) => {
+            res.status(500).jsonp({ msg: err.message })
+        });
 })
 
 module.exports = router;
