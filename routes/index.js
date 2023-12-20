@@ -3,6 +3,18 @@ const SalasController = require('../Controllers/Salas');
 var router = express.Router();
 
 /**
+ * >Rota para retornar todas as salas
+ */
+router.get('/salas', async function (req,res,next){
+    try{
+        const salas = await SalasController.getSalas();
+        res.jsonp(salas)
+    }catch(err){
+        res.status(500).jsonp({ msg: err.message })
+    }
+});
+
+/**
  * >Rota para adicionar uma ou mais salas ao sistema
  */
 router.post('/salas', function (req, res, next) {

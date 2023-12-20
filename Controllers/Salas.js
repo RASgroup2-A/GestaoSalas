@@ -34,6 +34,15 @@ module.exports.alocarSala = async (idSala, dataHora, duracao) => {
     })
 }
 
+module.exports.getSalas = async () => {
+    try {
+        const salas = await Salas.find();
+        return salas;
+    } catch (error) {
+        throw new Error('Erro ao obter todas as salas: ' + error.message);
+    }
+}
+
 module.exports.getSalasDisponiveis = async (alunos, dataHora, duracao) => {
     let data = new Date(dataHora);
     data.setMinutes(data.getMinutes() + duracao); //> Assume-se a "duracao" em MINUTOS
