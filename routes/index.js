@@ -62,4 +62,17 @@ router.post('/salas/:idSala/alocar', function (req, res, next) {
         });
 })
 
+/**
+ * >Rota para alocar várias salas
+ */
+router.post('/salas/alocar', function (req, res, next) {
+    let alocacoes = req.body
+    SalasController.alocarSalas(alocacoes)
+    .then((result) => {
+        res.jsonp(result)
+    }).catch((err) => {
+        res.status(500).jsonp({ msg: err.message })
+    });
+})
+
 module.exports = router;

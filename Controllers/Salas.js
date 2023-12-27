@@ -21,7 +21,7 @@ module.exports.alocarSala = async (idSala, dataHora, duracao) => {
     let data = new Date(dataHora);
     data.setMinutes(data.getMinutes() + duracao); //> Assume-se a "duracao" em MINUTOS
     let horaInicio = dataHora
-    let horaFim = data.toISOString().replace('T', ' ').slice(0, 19)
+    let horaFim = data.toISOString().replace('T', ' ').slice(0, 16)
 
     let horario = {
         dataHoraInicio: horaInicio,
@@ -32,6 +32,20 @@ module.exports.alocarSala = async (idSala, dataHora, duracao) => {
             ocupacao: horario
         }
     })
+}
+
+module.exports.alocarSalas = async (alocacoes) => {
+    try {
+        let count = 0
+        for(let i = 0; i < alocacoes.length; i++, count++) {
+            let alocacao = alocacoes[i]
+            let {idSala, dataHora, duracao} = alocacao
+            await this.alocarSala(idSala, dataHora, duracao)
+        }
+        return {msg: `${count} salas alocadas`}
+    } catch (err) {
+        throw err
+    }
 }
 
 module.exports.getSalas = async () => {
