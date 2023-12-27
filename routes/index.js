@@ -65,7 +65,7 @@ router.post('/salas/:idSala/alocar', function (req, res, next) {
 /**
  * >Rota para eliminar uma sala
  */
-router.post('/salas', function (req, res, next) {
+router.delete('/salas', function (req, res, next) {
     let id_sala = req.body;
     SalasController.removeSala(id_sala)
         .then((result) => {
@@ -74,5 +74,18 @@ router.post('/salas', function (req, res, next) {
                 res.status(500).jsonp({ msg: err.message })
         });
 });
+
+/**
+ * >Rota para alocar várias salas
+ */
+router.post('/salas/alocar', function (req, res, next) {
+    let alocacoes = req.body
+    SalasController.alocarSalas(alocacoes)
+    .then((result) => {
+        res.jsonp(result)
+    }).catch((err) => {
+        res.status(500).jsonp({ msg: err.message })
+    });
+})
 
 module.exports = router;
