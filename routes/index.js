@@ -65,8 +65,8 @@ router.post('/salas/:idSala/alocar', function (req, res, next) {
 /**
  * >Rota para eliminar uma sala
  */
-router.delete('/salas', function (req, res, next) {
-    let id_sala = req.body;
+router.delete('/salas/:idSala', function (req, res, next) {
+    let id_sala = req.params.idSala;
     SalasController.removeSala(id_sala)
         .then((result) => {
             res.jsonp(result)
