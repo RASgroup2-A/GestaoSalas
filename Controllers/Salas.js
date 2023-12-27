@@ -85,3 +85,7 @@ module.exports.getSalasDisponiveis = async (alunos, dataHora, duracao) => {
 
     return salasDisponiveis
 }
+
+module.exports.removeSala = async (idSala) => {
+    return await Salas.collection.deleteOne({ _id: idSala});
+}
